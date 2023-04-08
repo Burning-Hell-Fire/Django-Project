@@ -1,0 +1,265 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Dashboard</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html>
+<head>
+  <title>User Registration and Display Data</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--<link rel="stylesheet" type="text/css" href="{% static 'css/style2.css' %}">-->
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/style1.css' %}" rel="stylesheet">
+  <style>
+    #myBtn {
+  display: block; /* Hidden by default */
+  position: fixed; /* Fixed/sticky position */
+  bottom: 20px; /* Place the button at the bottom of the page */
+  right: 30px; /* Place the button 30px from the right */
+  z-index: 99; /* Make sure it does not overlap */
+  border: none; /* Remove borders */
+  outline: none; /* Remove outline */
+  background-color: #28ea59; /* Set a background color */
+  color: white; /* Text color */
+  cursor: pointer; /* Add a mouse pointer on hover */
+  padding: 15px; /* Some padding */
+  border-radius: 10%; /* Rounded corners */
+  font-size: 18px; /* Increase font size */
+}
+
+#myBtn:hover {
+  background-color: #149233; /* Add a dark-grey background on hover */
+}
+    form {
+        position: absolute;
+        top: 50%;
+        right: 15%;
+        transform: translateY(-50%);
+        padding: 5%;
+        
+    }
+
+    form input[type=text], form input[type=date], form input[type=email], form textarea {
+        width: 150%;
+        padding: 10px;
+        margin-bottom: 10px;
+        outline: none;
+        border: 0 0 1px solid rgb(0, 0, 0);
+        box-sizing: border-box;
+    }
+
+    form input[type=submit] {
+        background-color: #28ea59;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+
+    form input[type=submit]:hover {
+        background-color: #149233;
+    }
+    input{
+      width: 150%;
+    display: block;
+    border: none;
+    border-bottom: 1px solid #999;
+    padding: 6px 30px;
+    font-family: Poppins;
+    box-sizing: border-box;
+    }
+    .cs{
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .sec1{
+      width: auto;
+    }
+    .sec2{
+      width: auto;
+    }
+    @media screen and (min-width: 768px) {
+  
+  .sec1 {
+    width: 50%;
+  }
+
+  .sec2 {
+    width: 50%;
+  }
+}
+    
+</style>
+
+</head>
+<body onload="firstappearance()">
+  <a href="/signout"><button  id="myBtn" title="Go to top">SignOut</button></a>
+  <div id="c1">
+    <div id="sec1">
+  <section id="hero" class="d-flex flex-column justify-content-center">
+    <div class="container" data-aos="zoom-in" data-aos-delay="100">
+      {% if user.is_authenticated %}
+      <h1>HELLO</h1><h1 style="padding-top: 1%;">{{ fname }}</h1>
+      {% endif %}
+    {% if user.is_authenticated %}
+      <div class="tab social-links">
+        <a href="#" class="tablinks" onclick="openTab(event, 'registration')">ADD EMPLOYEE</i></a><br>
+        <a href="#" class="tablinks" onclick="openTab(event, 'display')">FILTER EMPLOYEE</i></a><br>
+        <a href="#" class="tablinks" onclick="openTab(event, 'delete')">DELETE EMPLOYEE</i></a><br>
+        <a href="#" class="tablinks" onclick="openTab(event, 'download')">DOWNLOAD EMPLOYEE</i></a>
+      </div>
+      <div id="my-text">
+      {% if messages %}
+      {% for message in messages %}
+      {% if message.tags == 'success' %}
+      <p style="color:green">{{ message }}</p>
+      {% elif message.tags == 'error' %}
+      <p style="color:red">{{ message }}</p>
+      {% else %}
+      <p>{{ message }}</p>
+      {% endif %}
+      {% endfor %}
+      {% endif %}
+      </div>
+    </div>
+  </section>
+  </div>
+<div class="container" id="sec2">
+  
+  
+  <!-- User Registration form -->
+  <div id="delete" class="tabcontent">
+    <form action="/dashboard/delete" method="POST">
+        {% csrf_token %}
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name"><br>
+        <input type="submit" value="Delete">
+    </form>
+  </div>
+  <div id="download" class="tabcontent">
+    <form action="/dashboard/download" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Download">
+    </form>
+  </div>
+  <div id="registration" class="tabcontent">
+    <form action="/dashboard/add_data" method="post">
+        {% csrf_token %}
+            <input type="text" id="name" name="name" placeholder="Name"><br>
+            <input type="text" id="age" name="age" placeholder="Age"><br>
+            <label for="">Date of Birth:</label>
+            <input type="date" id="dob" name="dob"><br><br>
+            <input type="text" id="city" name="city" placeholder="City"><br>
+            <input type="text" id="state" name="state" placeholder="State"><br>
+            <input type="text" id="country" name="country" placeholder="Country"><br>
+            <input type="text" id="phone" name="phone" placeholder="Mobile Number"><br>
+            <input type="submit" value="Add">
+        </form>
+  </div>
+  
+  <!-- Display Data table -->
+  <div id="display" class="tabcontent">
+    <form action="/dashboard/filter" method="post">
+        {% csrf_token %}
+        <label for="search_field">Choose an option:</label>
+        <select id="search_field" name="search_field">
+          <option value="">Select an option</option>
+          <option value="dob">DOB</option>
+          <option value="city">City</option>
+          <option value="state">State</option>
+          <option value="country">Country</option>
+        </select>
+        <br>
+        <label for="search_query">Enter the corresponding value:</label>
+        <input type="text" id="search_query" name="search_query">
+        <br>
+        <input type="submit" value="Submit">
+        <table>
+          <thead>
+            {% if objects is not None %}
+            <tr>
+              <th>ID</th>
+            </tr>
+            {% endif %}
+          </thead>
+          <tbody>
+              <tr>
+                {% for item in objects %}
+                <td>{{ item.name }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </form>
+      <br>
+    
+  </div>
+  {% endif %}
+</div>
+</div>
+<script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/typed.js/typed.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/waypoints/noframework.waypoints.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
+  <script>
+    function firstappearance(){
+      var i,tabcontent;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+    }
+    function openTab(evt, tabName) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+    }
+          var element = document.getElementById('my-text');
+
+          // set a timeout to remove the element after 1 second
+          setTimeout(function() {
+          element.parentNode.removeChild(element);
+          }, 3000);
+    </script>
+
+</body>
+</html>
+
+      
+</body>
+</html>
