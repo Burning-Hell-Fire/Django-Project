@@ -91,20 +91,30 @@
       display: flex;
       flex-wrap: wrap;
     }
-    .sec1{
+    #sec1{
       width: auto;
     }
-    .sec2{
+    #sec2{
       width: auto;
     }
-    @media screen and (min-width: 768px) {
+    @media (max-width: 800px) {
   
-  .sec1 {
-    width: 50%;
+  #sec1 {
+    position: relative;
+    top:100%;
   }
 
-  .sec2 {
-    width: 50%;
+  #sec2 {
+    position: relative;
+    top: 0;
+    padding-top: 100%;
+  }
+  form{
+    position: absolute;
+        top: 50%;
+        right: 15%;
+        transform: translateY(-50%);
+        padding-right: 20%;
   }
 }
     
@@ -115,34 +125,36 @@
   <a href="/signout"><button  id="myBtn" title="Go to top">SignOut</button></a>
   <div id="c1">
     <div id="sec1">
-  <section id="hero" class="d-flex flex-column justify-content-center">
-    <div class="container" data-aos="zoom-in" data-aos-delay="100">
-      {% if user.is_authenticated %}
-      <h1>HELLO</h1><h1 style="padding-top: 1%;">{{ fname }}</h1>
-      {% endif %}
-    {% if user.is_authenticated %}
-      <div class="tab social-links">
-        <a href="#" class="tablinks" onclick="openTab(event, 'registration')">ADD EMPLOYEE</i></a><br>
-        <a href="#" class="tablinks" onclick="openTab(event, 'display')">FILTER EMPLOYEE</i></a><br>
-        <a href="#" class="tablinks" onclick="openTab(event, 'delete')">DELETE EMPLOYEE</i></a><br>
-        <a href="#" class="tablinks" onclick="openTab(event, 'download')">DOWNLOAD EMPLOYEE</i></a>
-      </div>
-      <div id="my-text">
-      {% if messages %}
-      {% for message in messages %}
-      {% if message.tags == 'success' %}
-      <p style="color:green">{{ message }}</p>
-      {% elif message.tags == 'error' %}
-      <p style="color:red">{{ message }}</p>
-      {% else %}
-      <p>{{ message }}</p>
-      {% endif %}
-      {% endfor %}
-      {% endif %}
-      </div>
+      <section id="hero" class="d-flex flex-column justify-content-center">
+        <div class="container" data-aos="zoom-in" data-aos-delay="100">
+          {% if user.is_authenticated %}
+          <h1>HELLO</h1><h1 style="padding-top: 1%;">{{ fname }}</h1>
+          {% endif %}
+          {% if user.is_authenticated %}
+          <div class="tab social-links">
+            <a href="#" class="tablinks" onclick="openTab(event, 'image')">USER IMAGE</i></a><br>
+            <a href="#" class="tablinks" onclick="openTab(event, 'registration')">ADD EMPLOYEE</i></a><br>
+            <a href="#" class="tablinks" onclick="openTab(event, 'display')">FILTER EMPLOYEE</i></a><br>
+            <a href="#" class="tablinks" onclick="openTab(event, 'delete')">DELETE EMPLOYEE</i></a><br>
+            <a href="#" class="tablinks" onclick="openTab(event, 'download')">DOWNLOAD EMPLOYEE</i></a><br>
+            <a href="#" class="tablinks" onclick="openTab(event, 'view_image')">VIEW IMAGE</i></a><br>
+          </div>
+          <div id="my-text">
+            {% if messages %}
+            {% for message in messages %}
+            {% if message.tags == 'success' %}
+            <p style="color:green">{{ message }}</p>
+            {% elif message.tags == 'error' %}
+            <p style="color:red">{{ message }}</p>
+            {% else %}
+            <p>{{ message }}</p>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+      </section>
     </div>
-  </section>
-  </div>
 <div class="container" id="sec2">
   
   
@@ -161,13 +173,29 @@
         <input type="submit" value="Download">
     </form>
   </div>
+  <div id="image" class="tabcontent">
+    <form action="/dashboard/image_upload/" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" id="image" name="image">
+        <input type="submit" value="Upload">
+    </form>
+  </div>
+  <div id="view_image" class="tabcontent">
+    <form action="/dashboard/image_view/" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="submit" value="View">
+        {% if image is not None %}
+        <img src="{{ image }}" alt="Error!!" width="400" height="300" style="padding-top: 3%;padding-left: 100px;">
+        {% endif %}
+    </form>
+  </div>
   <div id="registration" class="tabcontent">
     <form action="/dashboard/add_data" method="post">
         {% csrf_token %}
             <input type="text" id="name" name="name" placeholder="Name"><br>
             <input type="text" id="age" name="age" placeholder="Age"><br>
             <label for="">Date of Birth:</label>
-            <input type="date" id="dob" name="dob"><br><br>
+            <input type="date" id="dob" name="dob"><br>
             <input type="text" id="city" name="city" placeholder="City"><br>
             <input type="text" id="state" name="state" placeholder="State"><br>
             <input type="text" id="country" name="country" placeholder="Country"><br>
@@ -211,10 +239,9 @@
         </table>
       </form>
       <br>
-    
   </div>
   {% endif %}
-</div>
+  </div>
 </div>
 <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
   <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
